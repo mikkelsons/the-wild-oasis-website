@@ -3,13 +3,18 @@
 import { useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
-import { isWithinInterval } from "date-fns";
+import {
+  differenceInDays,
+  isPast,
+  isSameDay,
+  isWithinInterval,
+} from "date-fns";
 import { useReservation } from "@/app/_components/ReservationContext";
 
 function isAlreadyBooked(range, datesArr) {
   return (
-    range.from &&
-    range.to &&
+    range?.from &&
+    range?.to &&
     datesArr.some((date) =>
       isWithinInterval(date, { start: range.from, end: range.to })
     )
@@ -19,13 +24,12 @@ function isAlreadyBooked(range, datesArr) {
 function DateSelector({ settings, bookedDates, cabin }) {
   const { range, setRange, resetRange } = useReservation();
 
-  // CHANGE
-  const regularPrice = 23;
-  const discount = 23;
-  const numNights = 23;
-  const cabinPrice = 23;
+  const displayRange = isAlreadyBooked(range, bookedDates) ? {} : range;
 
-  // SETTINGS
+  const { regularPrice, discount } = cabin;
+  const numNights = differenceInDays(displayRange?.to, displayRange?.from);
+  const cabinPrice = numNights * (regularPrice - discount);
+
   const { minBookingLength, maxBookingLength } = settings;
 
   return (
@@ -33,35 +37,44 @@ function DateSelector({ settings, bookedDates, cabin }) {
       <DayPicker
         className="custom-animate pt-12 place-self-center"
         mode="range"
-        selected={range}
+        selected={displayRange}
         onSelect={setRange}
-        min={minBookingLength + 1}
+        min={minBookingLength}
         max={maxBookingLength}
         fromMonth={new Date()}
         // startMonth={new Date()}
-        // fromDate={new Date()}
-        hidden={{ before: new Date() }}
+        fromDate={new Date()}
+        // hidden={{ before: new Date() }}
         toYear={new Date().getFullYear() + 5}
         captionLayout="dropdown"
         numberOfMonths={2}
         animate
+        disabled={(curDate) =>
+          isPast(curDate) ||
+          bookedDates.some((date) => isSameDay(date, curDate))
+        }
       />
 
       <div className="flex items-center justify-between px-8 bg-accent-500 text-primary-800 h-[72px]">
-        <div className="flex items-baseline gap-6">
-          <p className="flex gap-2 items-baseline">
-            {discount > 0 ? (
-              <>
-                <span className="text-2xl">${regularPrice - discount}</span>
-                <span className="line-through font-semibold text-primary-700">
-                  ${regularPrice}
-                </span>
-              </>
-            ) : (
-              <span className="text-2xl">${regularPrice}</span>
-            )}
-            <span className="">/night</span>
-          </p>
+        <div className="flex items-center gap-6">
+          <div className="flex-col items-center">
+            <p className="flex gap-2 items-baseline">
+              {discount > 0 ? (
+                <>
+                  <span className="text-2xl">${regularPrice - discount}</span>
+                  <span className="line-through font-semibold text-primary-700">
+                    ${regularPrice}
+                  </span>
+                </>
+              ) : (
+                <span className="text-2xl">${regularPrice}</span>
+              )}
+              <span className="">/night</span>
+            </p>
+            <p className="text-xs">
+              Minimum number of nights: {minBookingLength}
+            </p>
+          </div>
           {numNights ? (
             <>
               <p className="bg-accent-600 px-3 py-2 text-2xl">
