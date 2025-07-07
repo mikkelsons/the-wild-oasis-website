@@ -65,6 +65,7 @@ Create a `.env.local` file in the root directory and add the following:
 
 ```bash
 SUPABASE_URL=your-supabase-url
+SUPABASE_HOST=your-supabase-host
 SUPABASE_KEY=your-supabase-anon-key
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your-next-auth-secret
