@@ -41,6 +41,7 @@
   margin: 0 !important;
 }
 
+/* These two fix the unavailable date colors in the date picker dropdowns */
 .rdp-dropdown {
   color: rgb(76 107 138);
 }
