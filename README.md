@@ -19,14 +19,9 @@ You will need to login with Google in order to make reservations and interact wi
 
 ## Tech Stack
 
-**React**: Frontend library for building the user interface.
-**Next.js**: A React framework for server-side rendering. This app uses the App Router for file-based routing and layout management.
-**Supabase**: Database for storing user data, bookings, cabins, and settings.
-**React Query**: Manages remote state.
-**React Router**: Handles client-side routing for navigation.
-**Compound Components**: Easily customizable and flexible components.
-**Styled Components**: CSS framework for styling.
-**Context API**: Manage global state, including Dark Mode for the entire application
+- **React**: Frontend library for building the user interface.
+- **Next.js**: A React framework for server-side rendering. This app uses the App Router for file-based routing and layout management.
+- **Supabase**: Database for storing user data, bookings, cabins, and settings.
 
 ## Installation
 
